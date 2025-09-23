@@ -1,21 +1,4 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-
-// File setup to read sessions data
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const DATA_FILE = path.join(__dirname, "..", "sessions.json");
-
-function loadSessions() {
-	// Check file existence
-	if (!fs.existsSync(DATA_FILE)) {
-		return []
-	};
-	
-	return JSON.parse(fs.readFileSync(DATA_FILE, "utf-8"));
-}
+import { loadSessions } from "../common/utils";
 
 export function getSessions() {
 	// Return only public sessions
