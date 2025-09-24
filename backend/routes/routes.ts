@@ -1,6 +1,6 @@
 import express from "express";
 import { getSessions, getSession } from "../sessionFuncs/viewSessions.js";
-import { createSession, verifyManagementCode, deleteSession } from "../sessionFuncs/manageSessions.js";
+import { createSession, verifyManagementCode, deleteSession, editSession } from "../sessionFuncs/manageSessions.js";
 
 const router = express.Router();
 
@@ -28,6 +28,12 @@ router.post("/create", (req, res) => {
 
 router.delete("/:id", (req, res) => {
     const result = deleteSession(req.params.id);
+
+    res.status(result.status).json(result.data);
+});
+
+router.put("/:id", (req, res) => {
+    const result = editSession(req.params.id, req.body);
 
     res.status(result.status).json(result.data);
 });

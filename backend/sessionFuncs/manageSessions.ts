@@ -1,4 +1,3 @@
-import { access } from "fs";
 import { CreateSessionRequest, Session } from "../common/types";
 import { loadSessions, saveSessions } from "../common/utils";
 
@@ -84,6 +83,38 @@ export function deleteSession(id: string) {
         status: 200,
         data: { 
             message: "Session deleted successfully"
+        }
+    };
+}
+
+export function editSession(id: string, updates: Partial<CreateSessionRequest>) {
+    const sessions = loadSessions();
+    const index = sessions.findIndex((s: Session) => s.id === id);
+
+    if (index === -1) {
+        return {
+            status: 404,
+            data: {
+                error: "Session not found" 
+            }
+        };
+    }
+
+    sessions[index] = {
+        ...sessions[index],
+        ...updates,
+        title: updates.title?.trim() ?? sessions[index].title,
+        description: updates.description?.trim() ?? sessions[index].description,
+        date: updates.date?.trim() ?? sessions[index].date,
+        time: updates.time?.trim() ?? sessions[index].time,
+    };
+
+    saveSessions(sessions);
+
+    return {
+        status: 200,
+        data: { 
+            message: "Session updated successfully"
         }
     };
 }
