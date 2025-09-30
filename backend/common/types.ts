@@ -7,7 +7,7 @@ export interface Session {
     maxParticipants: number;
     type: 'public' | 'private';
     managementCode: string;
-    attendance: string[];
+    attendance: Attendee[];
 }
 
 export interface CreateSessionRequest {
@@ -17,4 +17,9 @@ export interface CreateSessionRequest {
     time: string;
     maxParticipants: number;
     type: 'public' | 'private';
+}
+
+export interface Attendee {
+    name: string;
+    code: string;
 }

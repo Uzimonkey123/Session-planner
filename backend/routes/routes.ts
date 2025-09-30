@@ -1,6 +1,7 @@
 import express from "express";
 import { getSessions, getSession } from "../sessionFuncs/viewSessions.js";
 import { createSession, verifyManagementCode, deleteSession, editSession } from "../sessionFuncs/manageSessions.js";
+import { addAttendance, deleteAttendance } from "../sessionFuncs/manageAttendance.js";
 
 const router = express.Router();
 
@@ -40,6 +41,18 @@ router.put("/:id", (req, res) => {
 
 router.post("/:id/management-code", (req, res) => {
     const result = verifyManagementCode(req.params.id, req.body.code);
+
+    res.status(result.status).json(result.data);
+});
+
+router.post("/:id/attendance", (req, res) => {
+    const result = addAttendance(req.params.id, req.body.name);
+
+    res.status(result.status).json(result.data);
+});
+
+router.delete("/:id/attendance", (req, res) => {
+    const result = deleteAttendance(req.params.id, req.body.code);
 
     res.status(result.status).json(result.data);
 });
