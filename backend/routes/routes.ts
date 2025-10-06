@@ -21,8 +21,8 @@ router.get("/:id", (req, res) => {
     res.json(result.data);
 });
 
-router.post("/create", (req, res) => {
-    const result = createSession(req.body);
+router.post("/create", async (req, res) => {
+    const result = await createSession(req.body);
 
     res.status(result.status).json(result.data);
 });
@@ -45,8 +45,8 @@ router.post("/:id/management-code", (req, res) => {
     res.status(result.status).json(result.data);
 });
 
-router.post("/:id/attendance", (req, res) => {
-    const result = addAttendance(req.params.id, req.body.name);
+router.post("/:id/attendance", async (req, res) => {
+    const result = await addAttendance(req.params.id, req.body.name, req.body.email);
 
     res.status(result.status).json(result.data);
 });

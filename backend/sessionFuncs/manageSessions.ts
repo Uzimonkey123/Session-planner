@@ -1,5 +1,6 @@
 import { CreateSessionRequest, Session } from "../common/types";
 import { loadSessions, saveSessions } from "../common/utils";
+import { sendManagementEmail } from "../emailHandler";
 
 function getPrivateUrl(): string {
     const randomNumbers = Math.floor(10000 + Math.random() * 90000);
@@ -16,7 +17,7 @@ function getNextId(sessions: Session[]): string {
     return String(Math.max(0, ...sessions.map(s => Number(s.id))) + 1);
 }
 
-export function createSession(sessionData: CreateSessionRequest) {
+export async function createSession(sessionData: CreateSessionRequest) {
     // Generate mgmt code and unique ID to new session
     const sessions = loadSessions();
     const sessionId = getNextId(sessions);
@@ -44,6 +45,14 @@ export function createSession(sessionData: CreateSessionRequest) {
     saveSessions(sessions);
 
     const { managementCode: _, ...sessionResponse } = newSession;
+
+    await sendManagementEmail(
+        sessionData.email,
+        sessionData.title,
+        managementCode,
+        sessionId,
+        accessCode
+    );
 
     if (sessionData.type === "private") {
         return {

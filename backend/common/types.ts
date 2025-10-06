@@ -17,6 +17,7 @@ export interface CreateSessionRequest {
     time: string;
     maxParticipants: number;
     type: 'public' | 'private';
+    email: string;
 }
 
 export interface Attendee {

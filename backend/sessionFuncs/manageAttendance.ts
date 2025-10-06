@@ -1,12 +1,13 @@
 import { Attendee, Session } from "../common/types";
 import { loadSessions, saveSessions } from "../common/utils";
+import { sendAttendanceEmail } from "../emailHandler";
 
 function getAttendeeCode(): string {
     const randomNumbers = Math.floor(10000 + Math.random() * 90000);
     return `attd-${randomNumbers}`;
 }
 
-export function addAttendance(id: string, name: string) {
+export async function addAttendance(id: string, name: string, email: string) {
     const sessions = loadSessions();
     const index = sessions.findIndex((s: Session) => s.id === id);
 
@@ -23,6 +24,13 @@ export function addAttendance(id: string, name: string) {
     const attendee: Attendee = { name: name.trim(), code };
 
     sessions[index].attendance.push(attendee);
+
+    await sendAttendanceEmail(
+        email,
+        sessions[index].title,
+        name,
+        code
+    )
 
     if (sessions[index].attendance.length > sessions[index].maxParticipants) {
         return {
