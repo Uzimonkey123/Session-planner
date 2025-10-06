@@ -35,5 +35,11 @@ export interface AttendanceDialogProps {
     open: boolean;
     setOpen: (open: boolean) => void;
     attendee: Attendance[];
-    onRefresh?: () => void;
+}
+
+export interface AttendanceActionDialogProps {
+    open: boolean;
+    setOpen: (open: boolean) => void;
+    sessionId: string;
+    onRefresh: () => void;
 }
