@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import SessionCard from "./SessionCard"
 import type { SessionListProps } from "../types"
 import { Typography } from "@material-tailwind/react";
+import { API_URL } from "../config/api";
 
 function SessionList(props: { filter?: string }) {
     const [sessions, setSessions] = useState<SessionListProps[]>([]);
@@ -10,7 +11,7 @@ function SessionList(props: { filter?: string }) {
 
     // Fetch sessions on mount
     useEffect(() => {
-        fetch("/sessions")
+        fetch(`${API_URL}/sessions`)
         .then((res) => res.json())
         .then((data) => setSessions(data))
         .catch((err) => console.error("Failed to fetch sessions:", err));

@@ -2,6 +2,7 @@ import { Fragment, useState, type SetStateAction } from "react";
 import { Button, Typography, Input } from "@material-tailwind/react";
 import { Dialog } from "@headlessui/react";
 import type { AttendanceActionDialogProps } from "../types";
+import { API_URL } from "../config/api";
 
 function RemoveAttendance(props: AttendanceActionDialogProps) {
     const [removeCode, setRemoveCode] = useState("");
@@ -10,7 +11,7 @@ function RemoveAttendance(props: AttendanceActionDialogProps) {
 
         const handleRemoveAttendance = async () => {
         try {
-            const res = await fetch(`/sessions/${props.sessionId}/attendance`, {
+            const res = await fetch(`${API_URL}/sessions/${props.sessionId}/attendance`, {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ code: removeCode }),

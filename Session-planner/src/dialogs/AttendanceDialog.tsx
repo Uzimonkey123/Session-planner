@@ -3,13 +3,14 @@ import { Button, Typography } from "@material-tailwind/react";
 import { Dialog } from "@headlessui/react";
 import type { AttendanceDialogProps } from "../types";
 import { useParams } from "react-router-dom";
+import { API_URL } from "../config/api";
 
 function AttendanceDialog(props: AttendanceDialogProps) {
     const { id } = useParams();
 
     const handleRemove = async (attendeeCode: string) => {
         try {
-            const res = await fetch(`/sessions/${id}/attendance`, {
+            const res = await fetch(`${API_URL}/sessions/${id}/attendance`, {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ code: attendeeCode }),

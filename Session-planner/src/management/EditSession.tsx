@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Input, Button, Typography } from "@material-tailwind/react";
+import { API_URL } from "../config/api";
 
 function EditSession() {
     const { id } = useParams();
@@ -11,7 +12,7 @@ function EditSession() {
 
     useEffect(() => {
         const code = searchParams.get("code");
-        const url = `/sessions/${id}${code ? `?code=${code}` : ""}`;
+        const url = `${API_URL}/sessions/${id}${code ? `?code=${code}` : ""}`;
             
         fetch(url)
         .then((res) => res.json())
@@ -26,7 +27,7 @@ function EditSession() {
 
     const handleSubmit = async () => {
         try {
-            const res = await fetch(`/sessions/${id}`, {
+            const res = await fetch(`${API_URL}/sessions/${id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(session),

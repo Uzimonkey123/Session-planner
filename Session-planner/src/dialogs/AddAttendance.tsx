@@ -2,6 +2,7 @@ import { Fragment, useState, type SetStateAction } from "react";
 import { Button, Typography, Input } from "@material-tailwind/react";
 import { Dialog } from "@headlessui/react";
 import type { AttendanceActionDialogProps } from "../types";
+import { API_URL } from "../config/api";
 
 function AddAttendance(props: AttendanceActionDialogProps) {
     const [name, setName] = useState("");
@@ -11,7 +12,7 @@ function AddAttendance(props: AttendanceActionDialogProps) {
 
     const handleAddAttendance = async () => {
         try {
-            const res = await fetch(`/sessions/${props.sessionId}/attendance`, {
+            const res = await fetch(`${API_URL}/sessions/${props.sessionId}/attendance`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name, email }),

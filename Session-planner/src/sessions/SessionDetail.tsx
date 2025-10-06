@@ -5,6 +5,7 @@ import { Button, Typography, Card, CardBody }  from "@material-tailwind/react";
 import ManagementCode from "../dialogs/ManagementCode";
 import AttendanceDialog from "../dialogs/AttendanceDialog";
 import ActionDialog from "../dialogs/ActionDialog";
+import { API_URL } from "../config/api";
 
 function SessionDetail() {
     const { id } = useParams();
@@ -23,7 +24,7 @@ function SessionDetail() {
     useEffect(() => {
         // In case of private session, try searching for code in url, if not found, consider public
         const code = searchParams.get("code");
-        const url = `/sessions/${id}${code ? `?code=${code}` : ""}`;
+        const url = `${API_URL}/sessions/${id}${code ? `?code=${code}` : ""}`;
         setAccessCode(code ? code : "");
             
         fetch(url)
@@ -35,7 +36,7 @@ function SessionDetail() {
     // Function to verify management code
     const verifyCode = async () => {
         try {
-            const res = await fetch(`/sessions/${id}/management-code`, {
+            const res = await fetch(`${API_URL}/sessions/${id}/management-code`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ code }),
@@ -61,7 +62,7 @@ function SessionDetail() {
     // Delete the session completely
     const deleteSession = async () => {
         try {
-            const res = await fetch(`/sessions/${id}`, {
+            const res = await fetch(`${API_URL}/sessions/${id}`, {
                 method: "DELETE",
             });
             if (!res.ok) throw new Error("Failed to delete session");
@@ -77,7 +78,7 @@ function SessionDetail() {
     };
 
     const fetchSession = () => {
-        const url = `/sessions/${id}${accessCode ? `?code=${accessCode}` : ""}`;
+        const url = `${API_URL}/sessions/${id}${accessCode ? `?code=${accessCode}` : ""}`;
         
         fetch(url)
         .then((res) => res.json())

@@ -1,6 +1,7 @@
 import { Button } from "@material-tailwind/react";
 import { Card, CardBody, Input, Typography } from "@material-tailwind/react";
 import { useState } from "react";
+import { API_URL } from "../config/api";
 
 function CreateSession() {
 	const [formData, setFormData] = useState({
@@ -23,7 +24,7 @@ function CreateSession() {
 		e.preventDefault();
 
 		try {
-			const res = await fetch("/sessions/create", {
+			const res = await fetch(`${API_URL}/sessions/create`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(formData),
