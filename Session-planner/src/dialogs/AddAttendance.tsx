@@ -11,7 +11,7 @@ function AddAttendance(props: AttendanceActionDialogProps) {
 
     const handleAddAttendance = async () => {
         try {
-            const res = await fetch(`http://localhost:3000/sessions/${props.sessionId}/attendance`, {
+            const res = await fetch(`/sessions/${props.sessionId}/attendance`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name, email }),

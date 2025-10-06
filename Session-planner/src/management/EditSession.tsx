@@ -26,7 +26,7 @@ function EditSession() {
 
     const handleSubmit = async () => {
         try {
-            const res = await fetch(`http://localhost:3000/sessions/${id}`, {
+            const res = await fetch(`/sessions/${id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(session),

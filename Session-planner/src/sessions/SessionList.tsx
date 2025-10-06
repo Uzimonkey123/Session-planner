@@ -10,7 +10,7 @@ function SessionList(props: { filter?: string }) {
 
     // Fetch sessions on mount
     useEffect(() => {
-        fetch("http://localhost:3000/sessions")
+        fetch("/sessions")
         .then((res) => res.json())
         .then((data) => setSessions(data))
         .catch((err) => console.error("Failed to fetch sessions:", err));

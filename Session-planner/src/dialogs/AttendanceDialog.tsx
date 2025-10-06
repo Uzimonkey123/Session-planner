@@ -9,7 +9,7 @@ function AttendanceDialog(props: AttendanceDialogProps) {
 
     const handleRemove = async (attendeeCode: string) => {
         try {
-            const res = await fetch(`http://localhost:3000/sessions/${id}/attendance`, {
+            const res = await fetch(`/sessions/${id}/attendance`, {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ code: attendeeCode }),
