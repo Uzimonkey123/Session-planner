@@ -38,8 +38,7 @@ export function addAttendance(id: string, name: string) {
     return {
         status: 200,
         data: {
-            message: "Attendee added successfully",
-            code
+            message: "Attendee added successfully, your code to modify is: " + code
         }
     };
 }
