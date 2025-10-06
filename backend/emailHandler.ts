@@ -39,7 +39,7 @@ export const sendManagementEmail = async (
             <p><strong>Management Code:</strong> ${managementCode}</p>
             ${accessCode ? `<p><strong>Access Code (for private session):</strong> ${accessCode}</p>
                 <br />
-                <p>To access your private session: http://localhost:5173/sessions/${sessionId}?code=${accessCode}</p>` : ''}
+                <p>To access your private session: http://localhost:5173/session/${sessionId}?code=${accessCode}</p>` : ''}
         `
     };
 
@@ -80,7 +80,7 @@ export const sendAttendanceEmail = async (
         await transporter.sendMail(mailOptions);
         console.log(`Attendance email sent to ${recipientEmail}`);
         return true;
-        
+
     } catch (error) {
         console.error('Error sending attendance email:', error);
         return false;
