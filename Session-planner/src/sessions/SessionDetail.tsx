@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { SessionDetailProps } from "../types"
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { Button, Typography }  from "@material-tailwind/react";
+import { Button, Typography, Card, CardBody }  from "@material-tailwind/react";
 import ManagementCode from "../dialogs/ManagementCode";
 import AttendanceDialog from "../dialogs/AttendanceDialog";
 import ActionDialog from "../dialogs/ActionDialog";
@@ -51,6 +51,8 @@ function SessionDetail() {
                 setErrorMsg("Invalid management code");
             }
 
+            setOpen(false);
+
         } catch (err: any) {
             setErrorMsg(err.message);
         }
@@ -87,78 +89,148 @@ function SessionDetail() {
         return <div>Error: {errorMsg}</div>;
     }
 
+    if (!session) {
+        return <div>Loading...</div>
+    }
+
+    let canJoin = true;
+    const isFull = session.attendance.length >= session.maxParticipants;
+    const isPast = new Date(session.date) < new Date();
+
+    if (isFull || isPast) {
+        canJoin = false;
+    }
+
     return (
-        <>
-            <div className="mt-4">
-                <Typography variant="h1">{session?.title}</Typography>
-                <Typography variant="h5">{session?.description}</Typography>
-                <br />
-                <Typography variant="h5">Date: {session?.date}</Typography>
-                <Typography variant="h5">Time: {session?.time}</Typography>
-                <Typography variant="h5">
-                    Number of participants: {session?.attendance.length}/{session?.maxParticipants}
-                </Typography>
-            </div>
+        <div className="max-w-4xl mx-auto p-6">
+            <Card className="shadow-xl">
+                <CardBody>
+                    <div className="mb-6">
+                        <Typography variant="h2" className="mb-3 text-gray-900">
+                            {session!.title}
+                        </Typography>
 
-            {!isAuthorized ? (
-                <>
-                    <div className="mt-4 space-x-2">
-                        <Button color="blue" onClick={() => setOpen(true)}>
-                            Manage Session
-                        </Button>
-
-                        <Button color="blue" onClick={() => setAttendanceActionsOpen(true)}>
-                            Attendance
-                        </Button>
-
-                        <ManagementCode 
-                            open={open} 
-                            setOpen={setOpen} 
-                            code={code} 
-                            setCode={setCode} 
-                            onVerify={verifyCode}
-                        />
-
-                        <ActionDialog
-                            open={attendanceActionsOpen}
-                            setOpen={setAttendanceActionsOpen}
-                            sessionId={id || ""}
-                            onRefresh={fetchSession}
-                        />
+                        <div className="flex gap-2 flex-wrap">
+                            <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                                session.type === "private" 
+                                    ? "bg-orange-100 text-orange-800" 
+                                    : "bg-green-100 text-green-800"
+                            }`}>
+                                {session.type}
+                            </span>
+                        </div>
                     </div>
-                </>
-            ) : (
-                <div className="mt-4 space-x-2">
-                    <Button 
-                        color="red" 
-                        onClick={deleteSession}
-                    >
-                        Delete Session
-                    </Button>
 
-                    <Button 
-                        color="blue" 
-                        onClick={() => navigate(`/sessions/${id}/edit${accessCode ? `?code=${accessCode}` : ""}`)}
-                    >
-                        Edit Session
-                    </Button>
+                    <Typography variant="paragraph" className="text-gray-700 mb-6 text-lg">
+                        {session.description}
+                    </Typography>
 
-                    <Button 
-                        color="green" 
-                        onClick={() => setAttendeesOpen(true)}
-                    >
-                        List Attendees
-                    </Button>
+                    <div className="grid grid-cols-3 gap-4 mb-8">
+                        <div className="p-4 rounded-lg border border-black">
+                            <Typography variant="small" className="text-gray-600 mb-1">
+                                Date
+                            </Typography>
 
-                    <AttendanceDialog
-                        open={attendeesOpen}
-                        setOpen={setAttendeesOpen}
-                        attendee={session?.attendance || []}
-                    />
-                </div>
-            )}
-        </>
+                            <Typography variant="h6" className="text-gray-900">
+                                {new Date(session.date).toLocaleDateString()}
+                            </Typography>
+                        </div>
+
+                        <div className="p-4 rounded-lg border border-black">
+                            <Typography variant="small" className="text-gray-600 mb-1">
+                                Time
+                            </Typography>
+
+                            <Typography variant="h6" className="text-gray-900">
+                                {session.time}
+                            </Typography>
+                        </div>
+
+                        <div className="p-4 rounded-lg border border-black">
+                            <Typography variant="small" className="text-gray-600 mb-1">
+                                Participants
+                            </Typography>
+
+                            <Typography variant="h6" className="text-gray-900">
+                                {session.attendance.length}/{session.maxParticipants}
+                            </Typography>
+                        </div>
+                    </div>
+
+                    {!isAuthorized ? (
+                        <div className="flex flex-wrap gap-3">
+                            <Button 
+                                color="blue" 
+                                onClick={() => setOpen(true)}
+                                size="lg"
+                            >
+                                Manage Session
+                            </Button>
+
+                            <Button 
+                                color="green" 
+                                onClick={() => setAttendanceActionsOpen(true)}
+                                size="lg"
+                                disabled={isPast}
+                            >
+                                Attendance
+                            </Button>
+                        </div>
+                    ) : (
+                        <div className="flex flex-wrap gap-3">
+                            <Button 
+                                color="blue" 
+                                onClick={() => navigate(`/sessions/${id}/edit${accessCode ? `?code=${accessCode}` : ""}`)}
+                                size="lg"
+                            >
+                                Edit Session
+                            </Button>
+
+                            <Button 
+                                color="green" 
+                                onClick={() => setAttendeesOpen(true)}
+                                variant="outlined"
+                                size="lg"
+                            >
+                                View Attendees ({session.attendance.length})
+                            </Button>
+
+                            <Button 
+                                color="red" 
+                                onClick={deleteSession}
+                                variant="outlined"
+                                size="lg"
+                            >
+                                Delete Session
+                            </Button>
+                        </div>
+                    )}
+                </CardBody>
+            </Card>
+
+            <ManagementCode 
+                open={open} 
+                setOpen={setOpen} 
+                code={code} 
+                setCode={setCode} 
+                onVerify={verifyCode}
+            />
+
+            <ActionDialog
+                open={attendanceActionsOpen}
+                setOpen={setAttendanceActionsOpen}
+                sessionId={id || ""}
+                onRefresh={fetchSession}
+                canJoin={canJoin}
+            />
+
+            <AttendanceDialog
+                open={attendeesOpen}
+                setOpen={setAttendeesOpen}
+                attendee={session.attendance || []}
+            />
+        </div>
     );
 }
 
-export default SessionDetail
+export default SessionDetail;

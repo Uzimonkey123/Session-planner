@@ -5,7 +5,7 @@ import type { AttendanceActionDialogProps } from "../types";
 import AddAttendance from "./AddAttendance";
 import RemoveAttendance from "./RemoveAttendance";
 
-function ActionDialog({ open, setOpen, sessionId, onRefresh }: AttendanceActionDialogProps) {
+function ActionDialog({ open, setOpen, sessionId, onRefresh, canJoin }: AttendanceActionDialogProps) {
     const [showAddDialog, setShowAddDialog] = useState(false);
     const [showRemoveDialog, setShowRemoveDialog] = useState(false);
 
@@ -19,7 +19,7 @@ function ActionDialog({ open, setOpen, sessionId, onRefresh }: AttendanceActionD
                         </Typography>
 
                         <div className="flex flex-col gap-3">
-                            <Button 
+                            {canJoin && <Button 
                                 color="green" 
                                 onClick={() => {
                                     setOpen(false);
@@ -27,7 +27,7 @@ function ActionDialog({ open, setOpen, sessionId, onRefresh }: AttendanceActionD
                                 }}
                             >
                                 I am going!
-                            </Button>
+                            </Button>}
 
                             <Button 
                                 color="orange" 

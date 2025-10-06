@@ -42,4 +42,5 @@ export interface AttendanceActionDialogProps {
     setOpen: (open: boolean) => void;
     sessionId: string;
     onRefresh: () => void;
+    canJoin?: boolean;
 }
