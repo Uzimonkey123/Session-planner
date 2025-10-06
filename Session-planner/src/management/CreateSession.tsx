@@ -10,6 +10,7 @@ function CreateSession() {
 		time: "",
 		maxParticipants: 1,
 		type: "public",
+		email: ""
 	}); // Basic form setup at the beginning
 	const [responseMessage, setResponseMessage] = useState("");
 
@@ -88,6 +89,14 @@ return (
 						value={formData.maxParticipants}
 						onChange={handleChange}
 						min={1}
+					/>
+
+					<Input
+						type="email"
+						label="Email"
+						name="email"
+						value={formData.email}
+						onChange={handleChange}
 					/>
 
 					<select className="bg-white rounded-md border-2 border-gray-400 p-2" 

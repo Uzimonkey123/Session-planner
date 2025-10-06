@@ -5,6 +5,7 @@ import type { AttendanceActionDialogProps } from "../types";
 
 function AddAttendance(props: AttendanceActionDialogProps) {
     const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
     const [showMessageDialog, setShowMessageDialog] = useState(false);
 
@@ -13,7 +14,7 @@ function AddAttendance(props: AttendanceActionDialogProps) {
             const res = await fetch(`http://localhost:3000/sessions/${props.sessionId}/attendance`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name }),
+                body: JSON.stringify({ name, email }),
             });
 
             const data = await res.json();
@@ -43,6 +44,12 @@ function AddAttendance(props: AttendanceActionDialogProps) {
                             label="Name"
                             value={name}
                             onChange={(e: { target: { value: SetStateAction<string>; }; }) => setName(e.target.value)}
+                        />
+
+                        <Input
+                            label="Email"
+                            value={email}
+                            onChange={(e: { target: { value: SetStateAction<string>; }; }) => setEmail(e.target.value)}
                         />
 
                         <div className="flex justify-end gap-2 mt-4">
