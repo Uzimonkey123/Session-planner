@@ -11,7 +11,7 @@ function EditSession() {
 
     useEffect(() => {
         const code = searchParams.get("code");
-        const url = `http://localhost:3000/sessions/${id}${code ? `?code=${code}` : ""}`;
+        const url = `/sessions/${id}${code ? `?code=${code}` : ""}`;
             
         fetch(url)
         .then((res) => res.json())

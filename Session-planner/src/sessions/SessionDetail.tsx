@@ -23,7 +23,7 @@ function SessionDetail() {
     useEffect(() => {
         // In case of private session, try searching for code in url, if not found, consider public
         const code = searchParams.get("code");
-        const url = `http://localhost:3000/sessions/${id}${code ? `?code=${code}` : ""}`;
+        const url = `/sessions/${id}${code ? `?code=${code}` : ""}`;
         setAccessCode(code ? code : "");
             
         fetch(url)
@@ -35,7 +35,7 @@ function SessionDetail() {
     // Function to verify management code
     const verifyCode = async () => {
         try {
-            const res = await fetch(`http://localhost:3000/sessions/${id}/management-code`, {
+            const res = await fetch(`/sessions/${id}/management-code`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ code }),
@@ -61,7 +61,7 @@ function SessionDetail() {
     // Delete the session completely
     const deleteSession = async () => {
         try {
-            const res = await fetch(`http://localhost:3000/sessions/${id}`, {
+            const res = await fetch(`/sessions/${id}`, {
                 method: "DELETE",
             });
             if (!res.ok) throw new Error("Failed to delete session");
@@ -77,7 +77,7 @@ function SessionDetail() {
     };
 
     const fetchSession = () => {
-        const url = `http://localhost:3000/sessions/${id}${accessCode ? `?code=${accessCode}` : ""}`;
+        const url = `/sessions/${id}${accessCode ? `?code=${accessCode}` : ""}`;
         
         fetch(url)
         .then((res) => res.json())
