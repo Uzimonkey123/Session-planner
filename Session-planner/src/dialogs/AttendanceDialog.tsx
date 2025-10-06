@@ -2,11 +2,10 @@ import { Fragment } from "react";
 import { Button, Typography } from "@material-tailwind/react";
 import { Dialog } from "@headlessui/react";
 import type { AttendanceDialogProps } from "../types";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 function AttendanceDialog(props: AttendanceDialogProps) {
     const { id } = useParams();
-    const navigate = useNavigate();
 
     const handleRemove = async (attendeeCode: string) => {
         try {
@@ -21,7 +20,7 @@ function AttendanceDialog(props: AttendanceDialogProps) {
             const data = await res.json();
             alert(data.message || "Attendee removed successfully");
 
-            navigate(-1);
+            props.onRefresh();
 
         } catch (err: any) {
             alert("Error: " + err.message);

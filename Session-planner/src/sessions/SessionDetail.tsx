@@ -228,6 +228,7 @@ function SessionDetail() {
                 open={attendeesOpen}
                 setOpen={setAttendeesOpen}
                 attendee={session.attendance || []}
+                onRefresh={fetchSession}
             />
         </div>
     );
