@@ -1,56 +1,85 @@
+import { useEffect, useState } from "react";
 import SessionCard from "./SessionCard"
+import type { SessionListProps } from "../types"
+import { Typography } from "@material-tailwind/react";
 
-function getSessions() {
-    // Fetch TODO
-    const sessions = [
-        {
-            id: 1,
-            title: "Morning Workout",
-            description: "High intensity cardio and strength training",
-            date: "2024-06-01",
-            time: "08:00"
-        },
-        {
-            id: 2,
-            title: "Team Meeting",
-            description: "Weekly team sync and project updates",
-            date: "2024-06-02",
-            time: "14:00"
-        },
-        {
-            id: 3,
-            title: "Client Presentation",
-            description: "Present Q4 results to stakeholders",
-            date: "2024-06-03",
-            time: "10:30"
-        },
-        {
-            id: 4,
-            title: "Code Review Session",
-            description: "Review new feature implementations veeeeeeeeeery loooong because whyyy nooooooooot",
-            date: "2024-06-04",
-            time: "15:00"
-        },
-        {
-            id: 5,
-            title: "Training Workshop",
-            description: "React and TypeScript best practices",
-            date: "2024-06-05",
-            time: "09:00"
-        }
-    ]
+function SessionList(props: { filter?: string }) {
+    const [sessions, setSessions] = useState<SessionListProps[]>([]);
+    const [filteredSessions, setFilteredSessions] = useState<SessionListProps[]>([]);
+    const [showPastSessions, setShowPastSessions] = useState(false);
 
-    return sessions
-}
+    // Fetch sessions on mount
+    useEffect(() => {
+        fetch("http://localhost:3000/sessions")
+        .then((res) => res.json())
+        .then((data) => setSessions(data))
+        .catch((err) => console.error("Failed to fetch sessions:", err));
+    }, []);
 
-function SessionList() {
+    // Filter sessions based on the filter prop
+    useEffect(() => {
+        setFilteredSessions(sessions.filter(session => 
+            props.filter ? 
+            session.title.toLowerCase().includes(props.filter.toLowerCase()) || 
+            session.description.toLowerCase().includes(props.filter.toLowerCase()) ||
+            session.date.includes(props.filter) : true
+        ));
+    }, [props.filter, sessions]);
+    
+    // Setup filters for date to separate cards
+    const now = new Date();
+    const upcomingSessions = filteredSessions.filter(session => new Date(session.date) >= now);
+    const pastSessions = filteredSessions.filter(session => new Date(session.date) < now);
+
     return (
-        <div className="flex flex-wrap justify-center gap-4 p-4">
-            {getSessions().map(session => (
-                <div key={session.id} className="flex">
-                    <SessionCard id={session.id} title={session.title} description={session.description} />
+        <div className="p-4">
+            <div className="flex flex-wrap justify-center gap-4">
+                {upcomingSessions.map(session => (
+                    <div key={session.id} className="flex">
+                        <SessionCard 
+                            id={session.id} 
+                            title={session.title} 
+                            description={session.description}
+                            date={session.date}
+                            maxParticipants={session.maxParticipants}
+                            attendance={session.attendance}
+                        />
+                    </div>
+                ))}
+            </div>
+
+            {pastSessions.length > 0 && (
+                <div className="mt-8">
+                    <div 
+                        className="flex justify-center cursor-pointer border-t border-gray-300 py-4 hover:bg-gray-400"
+                        onClick={() => setShowPastSessions(!showPastSessions)}
+                    >
+                        <Typography variant="h6" className="font-medium text-gray-300">
+                            Past Sessions ({pastSessions.length})
+                        </Typography>
+                        <Typography variant="h6" className="font-medium text-gray-300 ml-2">
+                            {showPastSessions ? "▲" : "▼"}
+                        </Typography>
+                    </div>
+                    
+                    {showPastSessions && (
+                        <div className="flex flex-wrap justify-center gap-4 mt-4">
+                            {pastSessions.map(session => (
+                                <div key={session.id} className="flex">
+                                    <SessionCard 
+                                        id={session.id} 
+                                        title={session.title} 
+                                        description={session.description}
+                                        date={session.date}
+                                        maxParticipants={session.maxParticipants}
+                                        attendance={session.attendance}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
-            ))}
+            )}
         </div>
     )
 }
