@@ -44,6 +44,7 @@ function EditSession() {
     };
 
     if (errorMsg) return <div>Error: {errorMsg}</div>;
+    if (!session) return <div>Loading...</div>;
 
 
     return (
