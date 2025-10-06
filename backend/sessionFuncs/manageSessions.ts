@@ -44,8 +44,6 @@ export async function createSession(sessionData: CreateSessionRequest) {
     sessions.push(newSession);
     saveSessions(sessions);
 
-    const { managementCode: _, ...sessionResponse } = newSession;
-
     await sendManagementEmail(
         sessionData.email,
         sessionData.title,
