@@ -3,6 +3,7 @@ import { Button, Typography, Input } from "@material-tailwind/react";
 import { Dialog } from "@headlessui/react";
 import type { AttendanceActionDialogProps } from "../types";
 import { API_URL } from "../config/api";
+import MessageDialog from "./MessageDialog";
 
 function AddAttendance(props: AttendanceActionDialogProps) {
     const [name, setName] = useState("");
@@ -65,21 +66,11 @@ function AddAttendance(props: AttendanceActionDialogProps) {
                 </div>
             </Dialog>
 
-            <Dialog open={showMessageDialog} onClose={() => setShowMessageDialog(false)} as={Fragment}>
-                <div className="fixed inset-0 flex items-center justify-center z-50 ml-48">
-                    <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-                        <Typography variant="h6" className="text-gray-700 mb-4">
-                            {message}
-                        </Typography>
-
-                        <div className="flex justify-end">
-                            <Button color="blue" onClick={() => setShowMessageDialog(false)}>
-                                OK
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-            </Dialog>
+            <MessageDialog
+                message={message}
+                showMessageDialog={showMessageDialog}
+                setShowMessageDialog={setShowMessageDialog}
+            />
         </>
     )
 }

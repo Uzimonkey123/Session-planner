@@ -6,11 +6,11 @@ import ManagementCode from "../dialogs/ManagementCode";
 import AttendanceDialog from "../dialogs/AttendanceDialog";
 import ActionDialog from "../dialogs/ActionDialog";
 import { API_URL } from "../config/api";
+import MessageDialog from "../dialogs/MessageDialog";
 
 function SessionDetail() {
     const { id } = useParams();
     const [session, setSession] = useState<SessionDetailProps | null>(null);
-    const [errorMsg, setErrorMsg] = useState<string | null>(null);
     const [searchParams] = useSearchParams();
     const [code, setCode] = useState("");
     const [accessCode, setAccessCode] = useState("")
@@ -18,6 +18,8 @@ function SessionDetail() {
     const [open, setOpen] = useState(false);
     const [attendeesOpen, setAttendeesOpen] = useState(false);
     const [attendanceActionsOpen, setAttendanceActionsOpen] = useState(false);
+    const [message, setMessage] = useState("");
+    const [showMessageDialog, setShowMessageDialog] = useState(false);
 
     const navigate = useNavigate();
 
@@ -30,7 +32,10 @@ function SessionDetail() {
         fetch(url)
         .then((res) => res.json())
         .then((data) => setSession(data))
-        .catch((err) => setErrorMsg(err.message));
+        .catch((err) => {
+            setMessage(err.message);
+            setShowMessageDialog(true);
+        });
     }, [searchParams]);
 
     // Function to verify management code
@@ -47,15 +52,17 @@ function SessionDetail() {
             const data = await res.json();
             if (data.valid) {
                 setIsAuthorized(true);
-                setErrorMsg(null);
+                setMessage("");
             } else {
-                setErrorMsg("Invalid management code");
+                setMessage("Invalid management code");
+                setShowMessageDialog(true);
             }
 
             setOpen(false);
 
         } catch (err: any) {
-            setErrorMsg(err.message);
+            setMessage(err.message);
+            setShowMessageDialog(true);
         }
     };
 
@@ -73,7 +80,8 @@ function SessionDetail() {
             navigate("/");
 
         } catch (err: any) {
-            setErrorMsg(err.message);
+            setMessage(err.message);
+            setShowMessageDialog(true);
         }
     };
 
@@ -83,12 +91,11 @@ function SessionDetail() {
         fetch(url)
         .then((res) => res.json())
         .then((data) => setSession(data))
-        .catch((err) => setErrorMsg(err.message));
+        .catch((err) => {
+            setMessage(err.message);
+            setShowMessageDialog(true);
+        });
     };
-
-    if (errorMsg) {
-        return <div>Error: {errorMsg}</div>;
-    }
 
     if (!session) {
         return <div>Loading...</div>
@@ -230,6 +237,12 @@ function SessionDetail() {
                 setOpen={setAttendeesOpen}
                 attendee={session.attendance || []}
                 onRefresh={fetchSession}
+            />
+
+            <MessageDialog
+                message={message}
+                showMessageDialog={showMessageDialog}
+                setShowMessageDialog={setShowMessageDialog}
             />
         </div>
     );

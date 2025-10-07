@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Input, Button, Typography } from "@material-tailwind/react";
 import { API_URL } from "../config/api";
+import MessageDialog from "../dialogs/MessageDialog";
 
 function EditSession() {
     const { id } = useParams();
     const navigate = useNavigate();
     const [session, setSession] = useState<any>(null);
-    const [errorMsg, setErrorMsg] = useState<string | null>(null);
     const [searchParams] = useSearchParams();
+    const [message, setMessage] = useState("");
+    const [showMessageDialog, setShowMessageDialog] = useState(false);
 
     useEffect(() => {
         const code = searchParams.get("code");
@@ -36,15 +38,15 @@ function EditSession() {
 
             const data = await res.json();
 
-            alert(data.message); // Pop-up with backend message
-            navigate(`/`); // Back to main page
+            setMessage(data.message); // Pop-up with backend message
+            setShowMessageDialog(true);
             
         } catch (err: any) {
-            setErrorMsg(err.message);
+            setMessage(err.message);
+            setShowMessageDialog(true);
         }
     };
 
-    if (errorMsg) return <div>Error: {errorMsg}</div>;
     if (!session) return <div>Loading...</div>;
 
 
@@ -96,6 +98,12 @@ function EditSession() {
                 <Button color="red" onClick={() => navigate(-1)}>Cancel</Button>
                 <Button color="green" onClick={handleSubmit}>Save</Button>
             </div>
+
+            <MessageDialog
+                message={message}
+                showMessageDialog={showMessageDialog}
+                setShowMessageDialog={setShowMessageDialog}
+            />
         </div>
     );
 }

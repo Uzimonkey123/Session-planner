@@ -45,3 +45,9 @@ export interface AttendanceActionDialogProps {
     onRefresh: () => void;
     canJoin?: boolean;
 }
+
+export interface MessageDialogProps {
+    message: string;
+    showMessageDialog: boolean;
+    setShowMessageDialog: (showMessageDialog: boolean) => void;
+}
