@@ -20,7 +20,8 @@ function RemoveAttendance(props: AttendanceActionDialogProps) {
 
             if (!res.ok) {
                 const data = await res.json();
-                alert(data.error || "Invalid code");
+                setMessage(data.error || "Invalid code");
+                setShowMessageDialog(true);
                 return;
             }
 

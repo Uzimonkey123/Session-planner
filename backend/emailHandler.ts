@@ -39,7 +39,7 @@ export const sendManagementEmail = async (
             <p><strong>Management Code:</strong> ${managementCode}</p>
             ${accessCode ? `<p><strong>Access Code (for private session):</strong> ${accessCode}</p>
                 <br />
-                <p>To access your private session: http://localhost:5173/session/${sessionId}?code=${accessCode}</p>` : ''}
+                <p>To access your private session: http://86.50.228.150/session/${sessionId}?code=${accessCode}</p>` : ''}
         `
     };
 
