@@ -56,7 +56,7 @@ export async function createSession(sessionData: CreateSessionRequest) {
         return {
             data: {
                 message: 'Private session created successfully, your management code is: ' + managementCode 
-                + ' and access code is: localhost:5173/session/' + newSession.id + '?code=' + accessCode,
+                + ' and access code is: /session/' + newSession.id + '?code=' + accessCode,
             },
             status: 201
         };
@@ -83,7 +83,7 @@ export function deleteSession(id: string) {
         };
     }
 
-    sessions.splice(index, 1)[0];
+    sessions.splice(index, 1);
     saveSessions(sessions);
 
     return {
